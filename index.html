@@ -25,7 +25,7 @@ label.sel{border-color:var(--acc)}label.right{border-color:var(--ok);background:
 .m{color:var(--mut);font-size:.85rem}
 </style></head><body>
 <h1>⚔ Data Dao</h1>
-<div class="sub">Analyst cultivation ladder. Pass a trial (3 of 4 correct) to break through.</div>
+<div class="sub">Analyst cultivation ladder. Pass a trial (9 of 10 correct) to break through.</div>
 <div class="bar"><i id="pb" style="width:0"></i></div>
 <div id="app"></div>
 <script>
@@ -34,36 +34,72 @@ const L=[
 ["Which SQL clause filters rows AFTER aggregation?",["HAVING","WHERE","LIMIT","ORDER BY"],0],
 ["Income data is heavily right-skewed. Best typical value?",["Median","Mean","Max","Sum"],0],
 ["LEFT JOIN customers to orders: customers with no orders show…",["NULL order columns","Dropped rows","Zeros","An error"],0],
-["Best chart for a metric's trend over time?",["Line chart","Pie chart","Scatter of IDs","Treemap"],0]]},
+["Best chart for a metric's trend over time?",["Line chart","Pie chart","Scatter of IDs","Treemap"],0],
+["Which function counts distinct customers?",["COUNT(DISTINCT customer_id)","COUNT(customer_id)","SUM(customer_id)","DISTINCT COUNT(*)"],0],
+["The mean of 2, 4, 6 and 100 is…",["28","5","53","112"],0],
+["Which keyword sorts SQL results?",["ORDER BY","GROUP BY","SORT ON","ARRANGE"],0],
+["A bar chart's y-axis should usually start at…",["Zero","The minimum value","Any number","The median"],0],
+["GROUP BY does what?",["Collapses rows into one per group for aggregation","Sorts rows","Filters rows","Joins tables"],0],
+["INNER JOIN returns…",["Only rows matching in both tables","All rows from the left table","All rows from both tables","Only unmatched rows"],0]]},
 {n:"Qi Gathering",r:"Analyst",d:"You sense the flow of data. Clean it, join it, doubt it.",q:[
 ["Revenue doubled after a join. Most likely cause?",["Join on a non-unique key (row fan-out)","Too many columns","Wrong chart","Timezone"],0],
 ["Missing values: the right first step is…",["Find out why they're missing before dropping or imputing","Drop all rows","Fill with zero","Fill with mean"],0],
 ["COUNT(col) versus COUNT(*)?",["COUNT(col) skips NULLs","They are identical","COUNT(*) skips NULLs","COUNT(col) counts distinct"],0],
-["Ice cream sales correlate 0.9 with drownings. Conclusion?",["A confounder (heat) likely drives both","Ice cream causes drowning","Drowning boosts sales","Data is wrong"],0]]},
+["Ice cream sales correlate 0.9 with drownings. Conclusion?",["A confounder (heat) likely drives both","Ice cream causes drowning","Drowning boosts sales","Data is wrong"],0],
+["You spot extreme outliers. First response?",["Investigate if they are errors or real","Delete them all","Always cap at 3 SD","Ignore them"],0],
+["A date column stored as text sorts '10/1' before '2/1'. Fix?",["Convert it to a real date type","Sort descending","Round the values","Add LIMIT"],0],
+["In SQL, NULL = NULL evaluates to…",["NULL (unknown)","TRUE","FALSE","0"],0],
+["Comparing groups of very different sizes, use…",["Rates or proportions","Raw counts","Raw sums","Maximums"],0],
+["A survey only reached people who answer email. Main risk?",["Selection bias","Overfitting","Collinearity","Autocorrelation"],0],
+["Which join keeps all rows from both tables?",["FULL OUTER JOIN","INNER JOIN","CROSS JOIN","SELF JOIN"],0]]},
 {n:"Foundation Establishment",r:"Analyst II",d:"Your dantian is stable. Windows, CTEs, and honest statistics.",q:[
 ["Running total per customer by date?",["SUM(x) OVER (PARTITION BY cust ORDER BY date)","GROUP BY cust, date","SUM(x) HAVING cust","COUNT(x) OVER ()"],0],
 ["p = 0.03 means…",["Data this extreme is rare if the null is true","97% chance the effect is real","3% chance you're wrong","Effect is large"],0],
 ["20 independent tests at α=0.05, no real effects. Expected false positives?",["About 1","0","About 5","About 10"],0],
-["Why analyze retention by cohort, not in aggregate?",["Aggregates mix old and new users and hide shifts","Cohorts are faster","It lowers variance","SQL requires it"],0]]},
+["Why analyze retention by cohort, not in aggregate?",["Aggregates mix old and new users and hide shifts","Cohorts are faster","It lowers variance","SQL requires it"],0],
+["Standard deviation measures…",["Spread of values around the mean","The center","Sample size","Skew"],0],
+["A 95% confidence interval means…",["The method captures the true value in 95% of repeated samples","95% chance the truth is in this interval","95% of the data lies inside it","The effect is 95% certain"],0],
+["Larger sample size, all else equal, makes standard error…",["Smaller","Larger","Unchanged","Negative"],0],
+["LAG(revenue) OVER (ORDER BY month) returns…",["The previous month's revenue","The next month's revenue","The average","The total"],0],
+["With a huge sample, a trivial effect can be…",["Statistically significant but practically meaningless","Always insignificant","Impossible to detect","Given a larger p-value"],0],
+["A CTE (WITH clause) is mainly for…",["Naming a subquery for readability and reuse","Storing data permanently","Speeding up every query","Building indexes"],0]]},
 {n:"Sword Chi",r:"Senior Analyst",d:"Your insight cuts. Experiments and causality become weapons.",q:[
 ["Checking an A/B test daily and stopping at first p<0.05 does what?",["Inflates the false positive rate","Raises power","Nothing","Lowers bias"],0],
 ["Sample ratio mismatch (50/50 split came out 55/45) signals…",["A bug in assignment or logging; distrust the result","Strong effect","Normal noise","Need more metrics"],0],
 ["Highly collinear predictors in regression cause…",["Unstable, high-variance coefficients","Lower R² always","Biased intercept only","Nothing"],0],
-["Difference-in-differences is appropriate when…",["No randomization, and pre-trends are parallel","You have one group","Data is text","Sample is tiny"],0]]},
+["Difference-in-differences is appropriate when…",["No randomization, and pre-trends are parallel","You have one group","Data is text","Sample is tiny"],0],
+["Statistical power is…",["The chance of detecting a true effect of a given size","The false positive rate","The p-value","The effect size"],0],
+["You track 10 metrics and ship on the one that is significant. Problem?",["Multiple comparisons inflate false positives","None, that is standard","It raises power","It is a Bonferroni correction"],0],
+["A novelty effect means…",["Early lift from newness that fades","Lift that appears only late","Bias from SRM","Seasonality"],0],
+["Randomization mainly exists to…",["Balance confounders, seen and unseen, in expectation","Increase sample size","Reduce variance only","Guarantee identical groups"],0],
+["CUPED reduces variance by…",["Adjusting for pre-experiment covariates","Adding users","Removing outliers","Lowering alpha"],0],
+["Observational regression gives price a coefficient of -2.1. Causal claim safe?",["No, confounding may remain","Yes","Yes, if R² is high","Yes, if p<0.05"],0]]},
 {n:"Mind Sword",r:"Staff / Lead Analyst",d:"The sword is thought. You see the question behind the question.",q:[
 ["Simpson's paradox: aggregate trend reverses in every subgroup. Response?",["Stratify and examine segment mix and confounders","Trust the aggregate","Trust the biggest segment","Drop the data"],0],
 ["Goodhart's law applied to metrics means…",["Targeted metrics get gamed; add guardrail metrics","Metrics never matter","Use more KPIs","Only use revenue"],0],
 ["\"Why did revenue drop 8%?\" Best first move?",["Check instrumentation, then decompose (volume × price × mix)","Propose a story","Run a regression","Ask for more data"],0],
-["Flat A/B result. Best report?",["Effect size with CI, what it rules out, and a recommendation","\"No effect\"","\"Not significant, ignore\"","Rerun until significant"]
+["Flat A/B result. Best report?",["Effect size with CI, what it rules out, and a recommendation","\"No effect\"","\"Not significant, ignore\"","Rerun until significant"],0],
+["Conversion rose 12% after a redesign shipped with no experiment, the same week as a big campaign. What do you tell leadership?",["The lift is real but confounded with the campaign; here is what we can bound","The redesign drove it, the timing proves it","The campaign drove it because it was bigger","Nothing can be said without an experiment"],0],
+["A test shows +3% overall but -5% in your largest enterprise segment (40% of revenue). Ship?",["Not on the headline; weigh segment revenue impact and check the result's robustness","Ship, the overall result is significant","Never ship with any negative segment","Ship to enterprise only"],0],
+["An exec wants DAU reported as up 20%, but a new bot-heavy channel inflates it. You…",["Report with and without the channel and explain the gap","Report 20% as asked","Refuse to report","Quietly report only the lower number"],0],
+["Your churn model has 97% accuracy and churn is 3% of users. Main issue?",["Predicting no churn for everyone also scores 97%, so accuracy says little","Accuracy is too low to ship","The sample is too small","97% proves the model is good"],0],
+["Two dashboards show different MAU, both correct under their own definitions. Next step?",["Align on one definition, document it, relabel or retire the other","Average them","Pick the bigger one","Ask engineering to fix it"],0],
+["A stakeholder wants a causal answer, but you only have observational data. Best response?",["State what the data supports, name assumptions, propose a design that could test causality","Say causality is impossible","Run a regression and call it causal","Decline the request"]
 ,0]]},
 {n:"Sword Heart",r:"Principal / Head of Analytics",d:"No sword, no data. Only decisions that change.",q:[
 ["Highest-leverage analytics work is…",["Changing which decisions get made and how they're framed","More dashboards","Faster queries","Bigger models"],0],
 ["Before commissioning an analysis, ask…",["Could any result change the decision?","Is the data big?","Is it novel?","Can we automate it?"],0],
 ["A sound metric framework includes…",["North star, input metrics, guardrails, owners, decision rules","One KPI","Many vanity KPIs","Only lagging metrics"],0],
-["Org distrusts data. First fix?",["Shared metric definitions and transparent methods","More charts","A new BI tool","Bigger team"],0]]}
+["Org distrusts data. First fix?",["Shared metric definitions and transparent methods","More charts","A new BI tool","Bigger team"],0],
+["Leadership wants one metric to rank teams, and you expect gaming. Best move?",["Pilot it with guardrail metrics and review gaming after a quarter","Ship it for accountability","Block it outright","Add ten more metrics"],0],
+["Your analysis contradicts a CEO-backed strategy, with moderate evidence. You…",["Present evidence with uncertainty and the cheapest test that would settle it","Soften it until it is agreeable","Overstate your certainty","Say nothing"],0],
+["Analysts drown in ad hoc requests. Highest-leverage fix?",["Triage by decision value and build self-serve for repeated questions","Hire more analysts","Say no to everything","Work weekends"],0],
+["Your experimentation program runs 200 tests a year with an 8% win rate. Failing?",["Not necessarily; judge learning, value per test and test quality","Yes, 8% is too low","No, 8% is excellent","Run more tests"],0],
+["You are asked for a forecast as a single number. Best response?",["Give the number with a range and the assumptions driving it","Give only the number","Refuse to forecast","Give only a wide range"],0],
+["You find a data incident corrupted a board metric already reported. You…",["Disclose promptly, quantify impact, correct the record, fix root cause","Wait until next quarter","Quietly fix it going forward","Blame the pipeline owner"],0]]}
 ];
-let S={};try{S=JSON.parse(localStorage.getItem("dd")||"{}")}catch(e){}
-const save=()=>{try{localStorage.setItem("dd",JSON.stringify(S))}catch(e){}};
+let S={};try{S=JSON.parse(localStorage.getItem("dd2")||"{}")}catch(e){}
+const save=()=>{try{localStorage.setItem("dd2",JSON.stringify(S))}catch(e){}};
 const $=id=>document.getElementById(id),app=$("app");
 const sh=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
 function home(){
@@ -79,11 +115,11 @@ function quiz(i){
  +`<button id="sub">Attempt breakthrough</button><div id="res"></div>`;
  window.pick=(a,b)=>{ans[a]=b;qs[a].o.forEach((_,k)=>$(`l${a}_${k}`).classList.toggle("sel",k===b))};
  $("sub").onclick=()=>{
-  if(ans.filter(v=>v!==undefined).length<qs.length){$("res").innerHTML='<div class="res m">Answer all four first.</div>';return}
+  if(ans.filter(v=>v!==undefined).length<qs.length){$("res").innerHTML='<div class="res m">Answer all ten first.</div>';return}
   let s=0;qs.forEach((x,a)=>{x.o.forEach((o,k)=>{const e=$(`l${a}_${k}`);e.classList.remove("sel");if(o.ok)e.classList.add("right");else if(k===ans[a])e.classList.add("wrong")});if(x.o[ans[a]].ok)s++});
-  const pass=s>=3;if(pass){S[i]=1;save()}
+  const pass=s>=9;if(pass){S[i]=1;save()}
   $("sub").style.display="none";
-  $("res").innerHTML=`<div class="res">${s}/4 · ${pass?"Breakthrough! "+l.n+" achieved.":"Qi deviation. Study the green answers and retry."}</div><button onclick="${pass?"home()":`quiz(${i})`}">${pass?"Return to the ladder":"Retry (reshuffled)"}</button>`;
+  $("res").innerHTML=`<div class="res">${s}/10 · ${pass?"Breakthrough! "+l.n+" achieved.":"Qi deviation. Study the green answers and retry."}</div><button onclick="${pass?"home()":`quiz(${i})`}">${pass?"Return to the ladder":"Retry (reshuffled)"}</button>`;
   window.scrollTo(0,document.body.scrollHeight)}
  window.scrollTo(0,0)}
 home();
