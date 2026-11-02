@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Data Dao: Cultivation Ladder</title>
+<style>
+:root{--bg:#f4efe6;--card:#fffaf0;--ink:#2a2420;--mut:#7a6e62;--acc:#b3261e;--ok:#2e7d4f;--bd:#d9cfbd;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14110f;--card:#1e1a17;--ink:#eee6d8;--mut:#9a8d7e;--acc:#e0584d;--ok:#5fc08a;--bd:#3a322b}}
+:root[data-theme="dark"]{--bg:#14110f;--card:#1e1a17;--ink:#eee6d8;--mut:#9a8d7e;--acc:#e0584d;--ok:#5fc08a;--bd:#3a322b}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Georgia,"Songti SC",serif}
+body{max-width:640px;margin:0 auto;padding:16px}
+h1{font-size:1.5rem;margin:8px 0 2px}.sub{color:var(--mut);font-size:.9rem;margin-bottom:14px}
+.bar{height:6px;background:var(--bd);border-radius:3px;margin:10px 0 18px}.bar i{display:block;height:100%;background:var(--acc);border-radius:3px;transition:width .4s}
+.lv{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:10px;display:flex;gap:12px;align-items:center;cursor:pointer}
+.lv.lock{opacity:.5;cursor:not-allowed}.lv.done{border-color:var(--ok)}
+.chk{flex:none;width:30px;height:30px;border:2px solid var(--bd);border-radius:50%;display:grid;place-items:center;font-size:1rem}
+.done .chk{background:var(--ok);border-color:var(--ok);color:#fff}
+.lv b{display:block}.lv small{color:var(--mut)}
+button{font:inherit;background:var(--acc);color:#fff;border:0;border-radius:10px;padding:12px 16px;width:100%;margin-top:12px;cursor:pointer}
+button.g{background:transparent;color:var(--mut);border:1px solid var(--bd)}
+.q{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:12px}
+.q p{margin:0 0 10px;font-weight:bold}
+label{display:block;padding:9px 10px;border:1px solid var(--bd);border-radius:8px;margin-bottom:6px;cursor:pointer;font-size:.95rem}
+label.sel{border-color:var(--acc)}label.right{border-color:var(--ok);background:rgba(46,125,79,.15)}label.wrong{border-color:var(--acc);background:rgba(179,38,30,.15)}
+.res{text-align:center;font-size:1.1rem;margin:10px 0}
+.m{color:var(--mut);font-size:.85rem}
+</style></head><body>
+<h1>⚔ Data Dao</h1>
+<div class="sub">Analyst cultivation ladder. Pass a trial (3 of 4 correct) to break through.</div>
+<div class="bar"><i id="pb" style="width:0"></i></div>
+<div id="app"></div>
+<script>
+const L=[
+{n:"Bone Tempering",r:"Junior Analyst",d:"Your body is raw. Learn SQL basics and read charts.",q:[
+["Which SQL clause filters rows AFTER aggregation?",["HAVING","WHERE","LIMIT","ORDER BY"],0],
+["Income data is heavily right-skewed. Best typical value?",["Median","Mean","Max","Sum"],0],
+["LEFT JOIN customers to orders: customers with no orders show…",["NULL order columns","Dropped rows","Zeros","An error"],0],
+["Best chart for a metric's trend over time?",["Line chart","Pie chart","Scatter of IDs","Treemap"],0]]},
+{n:"Qi Gathering",r:"Analyst",d:"You sense the flow of data. Clean it, join it, doubt it.",q:[
+["Revenue doubled after a join. Most likely cause?",["Join on a non-unique key (row fan-out)","Too many columns","Wrong chart","Timezone"],0],
+["Missing values: the right first step is…",["Find out why they're missing before dropping or imputing","Drop all rows","Fill with zero","Fill with mean"],0],
+["COUNT(col) versus COUNT(*)?",["COUNT(col) skips NULLs","They are identical","COUNT(*) skips NULLs","COUNT(col) counts distinct"],0],
+["Ice cream sales correlate 0.9 with drownings. Conclusion?",["A confounder (heat) likely drives both","Ice cream causes drowning","Drowning boosts sales","Data is wrong"],0]]},
+{n:"Foundation Establishment",r:"Analyst II",d:"Your dantian is stable. Windows, CTEs, and honest statistics.",q:[
+["Running total per customer by date?",["SUM(x) OVER (PARTITION BY cust ORDER BY date)","GROUP BY cust, date","SUM(x) HAVING cust","COUNT(x) OVER ()"],0],
+["p = 0.03 means…",["Data this extreme is rare if the null is true","97% chance the effect is real","3% chance you're wrong","Effect is large"],0],
+["20 independent tests at α=0.05, no real effects. Expected false positives?",["About 1","0","About 5","About 10"],0],
+["Why analyze retention by cohort, not in aggregate?",["Aggregates mix old and new users and hide shifts","Cohorts are faster","It lowers variance","SQL requires it"],0]]},
+{n:"Sword Chi",r:"Senior Analyst",d:"Your insight cuts. Experiments and causality become weapons.",q:[
+["Checking an A/B test daily and stopping at first p<0.05 does what?",["Inflates the false positive rate","Raises power","Nothing","Lowers bias"],0],
+["Sample ratio mismatch (50/50 split came out 55/45) signals…",["A bug in assignment or logging; distrust the result","Strong effect","Normal noise","Need more metrics"],0],
+["Highly collinear predictors in regression cause…",["Unstable, high-variance coefficients","Lower R² always","Biased intercept only","Nothing"],0],
+["Difference-in-differences is appropriate when…",["No randomization, and pre-trends are parallel","You have one group","Data is text","Sample is tiny"],0]]},
+{n:"Mind Sword",r:"Staff / Lead Analyst",d:"The sword is thought. You see the question behind the question.",q:[
+["Simpson's paradox: aggregate trend reverses in every subgroup. Response?",["Stratify and examine segment mix and confounders","Trust the aggregate","Trust the biggest segment","Drop the data"],0],
+["Goodhart's law applied to metrics means…",["Targeted metrics get gamed; add guardrail metrics","Metrics never matter","Use more KPIs","Only use revenue"],0],
+["\"Why did revenue drop 8%?\" Best first move?",["Check instrumentation, then decompose (volume × price × mix)","Propose a story","Run a regression","Ask for more data"],0],
+["Flat A/B result. Best report?",["Effect size with CI, what it rules out, and a recommendation","\"No effect\"","\"Not significant, ignore\"","Rerun until significant"]
+,0]]},
+{n:"Sword Heart",r:"Principal / Head of Analytics",d:"No sword, no data. Only decisions that change.",q:[
+["Highest-leverage analytics work is…",["Changing which decisions get made and how they're framed","More dashboards","Faster queries","Bigger models"],0],
+["Before commissioning an analysis, ask…",["Could any result change the decision?","Is the data big?","Is it novel?","Can we automate it?"],0],
+["A sound metric framework includes…",["North star, input metrics, guardrails, owners, decision rules","One KPI","Many vanity KPIs","Only lagging metrics"],0],
+["Org distrusts data. First fix?",["Shared metric definitions and transparent methods","More charts","A new BI tool","Bigger team"],0]]}
+];
+let S={};try{S=JSON.parse(localStorage.getItem("dd")||"{}")}catch(e){}
+const save=()=>{try{localStorage.setItem("dd",JSON.stringify(S))}catch(e){}};
+const $=id=>document.getElementById(id),app=$("app");
+const sh=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+function home(){
+ const n=L.filter((_,i)=>S[i]).length;$("pb").style.width=(n/L.length*100)+"%";
+ app.innerHTML=L.map((l,i)=>{const done=S[i],lock=i>0&&!S[i-1]&&!done;
+ return `<div class="lv ${done?"done":""} ${lock?"lock":""}" onclick="${lock?"":`quiz(${i})`}"><div class="chk">${done?"✓":lock?"🔒":i+1}</div><div><b>${l.n}</b><small>${l.r}${done?" · Achieved":lock?" · Locked":""}</small></div></div>`}).join("")
+ +`<div class="m" style="margin-top:12px">${n}/${L.length} realms broken.</div><button class="g" onclick="if(confirm('Reset all progress?')){S={};save();home()}">Reset cultivation</button>`}
+function quiz(i){
+ const l=L[i],qs=l.q.map(q=>{const o=sh(q[1].map((t,k)=>({t,ok:k===q[2]})));return{q:q[0],o}});
+ let ans=[];
+ app.innerHTML=`<button class="g" style="margin:0 0 12px" onclick="home()">← Back</button><h1>${l.n}</h1><div class="sub">${l.d}</div>`
+ +qs.map((x,a)=>`<div class="q"><p>${a+1}. ${x.q}</p>${x.o.map((o,b)=>`<label id="l${a}_${b}"><input type="radio" name="q${a}" hidden onchange="pick(${a},${b})">${o.t}</label>`).join("")}</div>`).join("")
+ +`<button id="sub">Attempt breakthrough</button><div id="res"></div>`;
+ window.pick=(a,b)=>{ans[a]=b;qs[a].o.forEach((_,k)=>$(`l${a}_${k}`).classList.toggle("sel",k===b))};
+ $("sub").onclick=()=>{
+  if(ans.filter(v=>v!==undefined).length<qs.length){$("res").innerHTML='<div class="res m">Answer all four first.</div>';return}
+  let s=0;qs.forEach((x,a)=>{x.o.forEach((o,k)=>{const e=$(`l${a}_${k}`);e.classList.remove("sel");if(o.ok)e.classList.add("right");else if(k===ans[a])e.classList.add("wrong")});if(x.o[ans[a]].ok)s++});
+  const pass=s>=3;if(pass){S[i]=1;save()}
+  $("sub").style.display="none";
+  $("res").innerHTML=`<div class="res">${s}/4 · ${pass?"Breakthrough! "+l.n+" achieved.":"Qi deviation. Study the green answers and retry."}</div><button onclick="${pass?"home()":`quiz(${i})`}">${pass?"Return to the ladder":"Retry (reshuffled)"}</button>`;
+  window.scrollTo(0,document.body.scrollHeight)}
+ window.scrollTo(0,0)}
+home();
+</script></body></html>
